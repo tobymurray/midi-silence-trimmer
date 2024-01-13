@@ -1,4 +1,4 @@
-use midly::{MidiMessage, Smf, TrackEventKind};
+use midly::{MetaMessage, MidiMessage, Smf, TrackEventKind};
 use std::env;
 use std::fs::File;
 use std::io::{Read, Write};
@@ -31,6 +31,17 @@ fn trim_silence(input_path: &str, output_path: &str) -> Result<(), Box<dyn std::
 		false
 	});
 
+	let end_of_track = track.iter().rposition(|event| {
+		if let TrackEventKind::Meta {
+			0: MetaMessage::EndOfTrack { .. },
+			..
+		} = &event.kind
+		{
+			return true;
+		}
+		false
+	});
+
 	let mut empty_track = Vec::new();
 
 	let trimmed_track = match first_note {
@@ -45,6 +56,21 @@ fn trim_silence(input_path: &str, output_path: &str) -> Result<(), Box<dyn std::
 		None => {
 			println!("Found no notes being played");
 			&mut empty_track
+		}
+	};
+
+	let trimmed_track = match end_of_track {
+		Some(index) => {
+			println!(
+				"Found the end of track at: {} with delta {}",
+				index, trimmed_track[index].delta
+			);
+			trimmed_track[index].delta = 0.into();
+			trimmed_track
+		}
+		None => {
+			println!("Found no end of track");
+			trimmed_track
 		}
 	};
 
