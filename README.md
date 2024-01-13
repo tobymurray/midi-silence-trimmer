@@ -1,10 +1,16 @@
 # MIDI Silence Trimmer
 
-A Rust program to trim silence in MIDI files (by modifying the delta time of the first note).
+A Rust program to trim silence in MIDI files (by modifying the delta time of the first note and end of track event).
 
 ## Overview
 
-This program reads a MIDI file, identifies the position of the first played note in the track, and trims the silence by setting the delta time of the note event to 0. The modified MIDI file is then written to the specified output path.
+This program:
+
+- reads a MIDI file
+- identifies the first played note in the track
+- identifies the end of track event
+- trims the silence by setting the delta time of the note and end of track event to 0
+- writes out the modified MIDI file to the specified output path
 
 ## Usage
 
