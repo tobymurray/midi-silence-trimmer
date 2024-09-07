@@ -34,5 +34,5 @@ This command trims the silence at the beginning of input.mid file and saves the 
 - [midly](https://github.com/kovaxis/midly): a feature-complete MIDI decoder and encoder designed for efficiency and ease of use.
 
 ## To build targeting Raspberry Pi
-
+- `sudo pacman -S aarch64-linux-gnu-gcc`
 - `rustup target add aarch64-unknown-linux-gnu`
